@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import string
 
 
 def main() -> None:
@@ -18,6 +19,7 @@ def main() -> None:
 
     movies_list: list = movies_dict["movies"]
     results = []
+    trans_table = create_trans_table()
 
     match args.command:
         case "search":
@@ -26,14 +28,20 @@ def main() -> None:
             
             for movie in movies_list:
                 title = movie["title"]
-                if args.query in title:
+                if args.query.lower().translate(trans_table) in title.lower().translate(trans_table):
                     results.append(title)
 
             for i, title in enumerate(results):
                 print(f"{i}. {title}")
-            
+
         case _:
             parser.print_help()
+
+def create_trans_table():
+    d = {}
+    for char in string.punctuation:
+        d[char] = ""
+    return str.maketrans(d)
 
 
 if __name__ == "__main__":
