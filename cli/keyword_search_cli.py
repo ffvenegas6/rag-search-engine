@@ -28,8 +28,14 @@ def main() -> None:
             
             for movie in movies_list:
                 title = movie["title"]
-                if args.query.lower().translate(trans_table) in title.lower().translate(trans_table):
-                    results.append(title)
+                query = args.query.lower().translate(trans_table)
+                query_tokens = query.split()
+                title_tokens = title.lower().translate(trans_table).split()
+                for q_token in query_tokens:
+                    for t_token in title_tokens:
+                        if q_token in t_token:
+                            results.append(title)
+                            break
 
             for i, title in enumerate(results):
                 print(f"{i}. {title}")
